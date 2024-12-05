@@ -71,7 +71,7 @@ func validatePage(pageI int, rules map[int][]int, pages []int) bool {
 	return true
 }
 
-func checkPages(rules map[int][]int, pages []int) int {
+func checkPagesPart1(rules map[int][]int, pages []int) int {
 	for i := 0; i < len(pages); i++ {
 		if !validatePage(i, rules, pages) {
 			return 0
@@ -80,16 +80,20 @@ func checkPages(rules map[int][]int, pages []int) int {
 	return pages[len(pages)/2]
 }
 
-func part1() {
+func checkPagesPart2(rules map[int][]int, pages []int) int {
+	return 0
+}
+
+func puzzle(checker func (map[int][]int, []int)int) {
 	rules, pages_sets := readInput("input")
 	count := 0
 	for p := range(pages_sets) {
-		count += checkPages(rules, pages_sets[p])
+		count += checker(rules, pages_sets[p])
 	}
 
 	fmt.Println(count)
 }
 
 func main() {
-	part1()
+	part1(checkPagesPart1)
 }
