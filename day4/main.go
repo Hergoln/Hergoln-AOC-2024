@@ -27,6 +27,8 @@ func readInput(filename string) [][]rune {
 		line := []rune(fileScanner.Text())
 		lines[i] = line
 	}
+
+	readFile.Close()
 	return lines
 }
 
