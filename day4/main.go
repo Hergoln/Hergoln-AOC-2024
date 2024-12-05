@@ -110,24 +110,69 @@ func allRoundCheck(input [][]rune, h, v int) int {
 	return count
 }
 
-func day1() {
+func part1() {
 	input := readInput(INPUT_FILENAME)
 
 	count := 0
 	for horI := range(input) {
 		for verI := range(input[0]) {
-			inc := allRoundCheck(input, horI, verI)
-			count += inc
-			// fmt.Println(inc)
+			count += allRoundCheck(input, horI, verI)
 		}
 	}
 
 	fmt.Println(count)
 }
 
-func day2() {
+// Left Upper corner going Downwards
+func LUDCheck(input [][]rune, h, v int) bool {
+	return input[h-1][v-1] == 'M' && input[h+1][v+1] == 'S'
+}
+
+// Left Down corner going Uppwards
+func LDUCheck(input [][]rune, h, v int) bool {
+	return input[h+1][v-1] == 'M' && input[h-1][v+1] == 'S'
+}
+
+// Right Down corner going Uppwords
+func RDUCheck(input [][]rune, h, v int) bool {
+	return input[h+1][v+1] == 'M' && input[h-1][v-1] == 'S'
+}
+
+// Right Upper corner going Downwards
+func RUDCheck(input [][]rune, h, v int) bool {
+	return input[h-1][v+1] == 'M' && input[h+1][v-1] == 'S'
+}
+
+func xCheck(input [][]rune, h, v int) int {
+	if input[h][v] != 'A' {
+		return 0
+	}
+
+	LUD := LUDCheck(input, h, v)
+	LDU := LDUCheck(input, h, v)
+	RDU := RDUCheck(input, h, v)
+	RUD := RUDCheck(input, h, v)
+
+	if LUD && LDU || LUD && RUD || RDU && LDU || RDU && RUD {
+		return 1
+	}
+
+	return 0
+}
+
+func part2() {
+	input := readInput(INPUT_FILENAME)
+
+	count := 0
+	for horI := 1; horI < len(input) -1; horI++ {
+		for verI := 1; verI < len(input) -1; verI++ {
+			count += xCheck(input, horI, verI)
+		}
+	}
+
+	fmt.Println(count)
 }
 
 func main() {
-	day1()
+	part2()
 }
