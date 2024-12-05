@@ -54,7 +54,7 @@ func readInput(filename string) (map[int][]int,[][]int) {
 	return rules, pages_sets
 }
 
-func validatePage(pageI int, rules map[int][]int, pages []int) bool {
+func findError(pageI int, rules map[int][]int, pages []int) int {
 	var rule []int
 	if rules[pages[pageI]] == nil {
 		rule = make([]int, 0)
@@ -64,28 +64,41 @@ func validatePage(pageI int, rules map[int][]int, pages []int) bool {
 	
 	for i := pageI; i >= 0; i-- {
 		if slices.Contains(rule, pages[i]) {
-			return false
+			return i
 		}
 	}
 
-	return true
+	return -1
 }
 
 func checkPagesPart1(rules map[int][]int, pages []int) int {
 	for i := 0; i < len(pages); i++ {
-		if !validatePage(i, rules, pages) {
+		if findError(i, rules, pages) >= 0 {
 			return 0
 		}
 	}
 	return pages[len(pages)/2]
 }
 
+
 func checkPagesPart2(rules map[int][]int, pages []int) int {
+	for i := 0; i < len(pages); {
+		fmt.Println(pages)
+		err := findError(i, rules, pages)
+		if err >= 0 {
+			// move i before err
+			newPages := pages[0:err]
+			newPages = append(newPages, pages[i])
+			newPages = append(newPages, pages[err:i]...)
+			newPages = append(newPages, pages[i:]...)
+			return newPages[len(newPages)/2]
+		}
+	}
 	return 0
 }
 
 func puzzle(checker func (map[int][]int, []int)int) {
-	rules, pages_sets := readInput("input")
+	rules, pages_sets := readInput("example")
 	count := 0
 	for p := range(pages_sets) {
 		count += checker(rules, pages_sets[p])
@@ -95,5 +108,5 @@ func puzzle(checker func (map[int][]int, []int)int) {
 }
 
 func main() {
-	part1(checkPagesPart1)
+	puzzle(checkPagesPart2)
 }
