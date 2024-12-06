@@ -82,23 +82,34 @@ func checkPagesPart1(rules map[int][]int, pages []int) int {
 
 
 func checkPagesPart2(rules map[int][]int, pages []int) int {
-	for i := 0; i < len(pages); {
-		fmt.Println(pages)
-		err := findError(i, rules, pages)
-		if err >= 0 {
-			// move i before err
-			newPages := pages[0:err]
-			newPages = append(newPages, pages[i])
-			newPages = append(newPages, pages[err:i]...)
-			newPages = append(newPages, pages[i:]...)
-			return newPages[len(newPages)/2]
+	for i := 0; i < len(pages); i++ {
+		if findError(i, rules, pages) >= 0 {
+			newPage := correctPage(rules, pages)
+			return newPage[len(newPage)/2]
 		}
 	}
 	return 0
 }
 
+func correctPage(rules map[int][]int, pages []int) []int {
+	for i := 0; i < len(pages); {
+		err := findError(i, rules, pages)
+		if err > -1 {
+			newPages := append([]int(nil), pages[0:err]...)
+			newPages = append(newPages, pages[i])
+			newPages = append(newPages, pages[err:i]...)
+			newPages = append(newPages, pages[i+1:]...)
+			pages = newPages
+			i = err
+		} else {
+			i++
+		}
+	}
+	return pages
+}
+
 func puzzle(checker func (map[int][]int, []int)int) {
-	rules, pages_sets := readInput("example")
+	rules, pages_sets := readInput("input")
 	count := 0
 	for p := range(pages_sets) {
 		count += checker(rules, pages_sets[p])
