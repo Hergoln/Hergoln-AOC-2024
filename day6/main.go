@@ -129,10 +129,10 @@ func canPutObstacle(schema [][]rune, pos Coo, dir Dir) bool {
 }
 
 func matchAtEnd(visitedBefore []Coo, toMatch []Coo) bool {
-	if len(visitedBefore)-len(toMatch)-1 < 0 {
+	if len(visitedBefore)-len(toMatch) < 0 {
 		return false
 	}
-	return reflect.DeepEqual(visitedBefore[len(visitedBefore)-len(toMatch)-1:], toMatch)
+	return reflect.DeepEqual(visitedBefore[len(visitedBefore)-len(toMatch):], toMatch)
 }
 
 func isLoopIn(visited []Coo) bool {
@@ -175,7 +175,7 @@ func createsALoop(baseSchema [][]rune, initialPos Coo, initialDir Dir) bool {
 }
 
 func part2() {
-	placeSchema, pos, dir := readInput("example")
+	placeSchema, pos, dir := readInput("input")
 
 	count := 0
 	for i := 0; !guardOutside(placeSchema, pos); i++ {
